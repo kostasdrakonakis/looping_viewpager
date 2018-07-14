@@ -19,30 +19,21 @@ public class LoopingViewPager extends ViewPager {
         void onIndicatorPageChange(int newIndicatorPosition);
     }
 
+    private boolean isToTheRight = true;
+    private boolean isIndicatorSmart = false;
+    private int previousScrollState = SCROLL_STATE_IDLE;
+    private int scrollState = SCROLL_STATE_IDLE;
+    private int interval = 5000;
+    private int previousPosition = 0;
+    private int currentPagePosition = 0;
+
     protected boolean isEndless = true;
     protected boolean isAutoScroll = false;
     protected boolean wrapContent = true;
     protected float aspectRatio;
 
-    //AutoScroll
-    private int interval = 5000;
-    private int previousPosition = 0;
-    private int currentPagePosition = 0;
     private Handler autoScrollHandler = new Handler();
-
-    //For Indicator
     private IndicatorChangeListener indicatorListener;
-    private int previousScrollState = SCROLL_STATE_IDLE;
-    private int scrollState = SCROLL_STATE_IDLE;
-    private boolean isToTheRight = true;
-    /**
-     * This boolean indicates whether LoopingViewPager needs to continuously tell the indicator about
-     * the progress of the scroll, even after onIndicatorPageChange().
-     * If indicator is smart, it should be able to finish the animation by itself after we told it that a position has been selected.
-     * If indicator is not smart, then LoopingViewPager will continue to fire onIndicatorProgress() to update the indicator
-     * transition position.
-     */
-    private boolean isIndicatorSmart = false;
 
     public LoopingViewPager(Context context) {
         super(context);
@@ -56,7 +47,7 @@ public class LoopingViewPager extends ViewPager {
             isEndless = a.getBoolean(R.styleable.LoopingViewPager_isEndless, false);
             isAutoScroll = a.getBoolean(R.styleable.LoopingViewPager_autoScroll, false);
             wrapContent = a.getBoolean(R.styleable.LoopingViewPager_wrap_content, true);
-            interval = a.getInt(R.styleable.LoopingViewPager_scrollInterval, 5000);
+            interval = a.getInt(R.styleable.LoopingViewPager_scrollInterval, getInterval(R.integer.auto_scroll_interval));
             aspectRatio = a.getFloat(R.styleable.LoopingViewPager_viewPagerAspectRatio, 0f);
         } finally {
             a.recycle();
@@ -73,13 +64,9 @@ public class LoopingViewPager extends ViewPager {
             int finalHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(finalWidthMeasureSpec, finalHeightMeasureSpec);
         } else {
-            //https://stackoverflow.com/a/24666987/7870874
             if (wrapContent) {
                 int mode = MeasureSpec.getMode(heightMeasureSpec);
-                // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
-                // At Most means that the ViewPager is not in a ScrollView WRAP_CONTENT.
                 if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
-                    // super has to be called in the beginning so the child views can be initialized.
                     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                     int height = 0;
                     for (int i = 0; i < getChildCount(); i++) {
@@ -101,28 +88,14 @@ public class LoopingViewPager extends ViewPager {
         if (isEndless) setCurrentItem(1, false);
     }
 
-    public void resumeAutoScroll() {
-        autoScrollHandler.postDelayed(autoScrollRunnable, interval);
-    }
-
-    public void pauseAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable);
-    }
-
-    /**
-     * A method that helps you integrate a ViewPager Indicator.
-     * This method returns the expected position (Starting from 0) of indicators.
-     * This method should be used after currentPagePosition is updated.
-     */
     public int getIndicatorPosition() {
         if (!isEndless) {
             return currentPagePosition;
         } else {
             if (!(getAdapter() instanceof LoopingViewPagerAdapter)) return currentPagePosition;
-            if (currentPagePosition == 0) { //Dummy last item is selected. Indicator should be at the last one
+            if (currentPagePosition == 0) {
                 return ((LoopingViewPagerAdapter) getAdapter()).getListCount() - 1;
             } else if (currentPagePosition == ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition() + 1) {
-                //Dummy first item is selected. Indicator should be at the first one
                 return 0;
             } else {
                 return currentPagePosition - 1;
@@ -130,12 +103,6 @@ public class LoopingViewPager extends ViewPager {
         }
     }
 
-    /**
-     * A method that helps you integrate a ViewPager Indicator.
-     * This method returns the expected position (Starting from 0) of indicators.
-     * This method should be used before currentPagePosition is updated, when user is trying to
-     * select a different page, i.e. onPageScrolled() is triggered.
-     */
     public int getSelectingIndicatorPosition(boolean isToTheRight) {
         if (scrollState == SCROLL_STATE_SETTLING
                 || scrollState == SCROLL_STATE_IDLE
@@ -149,20 +116,16 @@ public class LoopingViewPager extends ViewPager {
 
         if (!(getAdapter() instanceof LoopingViewPagerAdapter))
             return currentPagePosition + delta;
-        if (currentPagePosition == 1 && !isToTheRight) { //Special case for first page to last page
+        if (currentPagePosition == 1 && !isToTheRight) {
             return ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition() - 1;
         } else if (currentPagePosition == ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition()
-                && isToTheRight) { //Special case for last page to first page
+                && isToTheRight) {
             return 0;
         } else {
             return currentPagePosition + delta - 1;
         }
     }
 
-    /**
-     * A method that helps you integrate a ViewPager Indicator.
-     * This method returns the expected count of indicators.
-     */
     public int getIndicatorCount() {
         PagerAdapter adapter = getAdapter();
         if (adapter == null) return 0;
@@ -188,8 +151,20 @@ public class LoopingViewPager extends ViewPager {
         this.isIndicatorSmart = isIndicatorSmart;
     }
 
+    public void setAutoScroll(boolean isAutoScroll) {
+        this.isAutoScroll = isAutoScroll;
+    }
+
     public void setIndicatorChangeListener(IndicatorChangeListener indicatorListener) {
         this.indicatorListener = indicatorListener;
+    }
+
+    public void resumeAutoScroll() {
+        autoScrollHandler.postDelayed(autoScrollRunnable, interval);
+    }
+
+    public void pauseAutoScroll() {
+        autoScrollHandler.removeCallbacks(autoScrollRunnable);
     }
 
     protected void init() {
