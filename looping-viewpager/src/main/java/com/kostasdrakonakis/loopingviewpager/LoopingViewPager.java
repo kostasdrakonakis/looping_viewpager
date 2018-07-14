@@ -246,9 +246,9 @@ public class LoopingViewPager extends ViewPager {
 
                         int index = getCurrentItem();
                         if (index == 0) {
-                            setCurrentItem(itemCount - 2, false); //Real last item
+                            setCurrentItem(itemCount - 2, false);
                         } else if (index == itemCount - 1) {
-                            setCurrentItem(1, false); //Real first item
+                            setCurrentItem(1, false);
                         }
                     }
 

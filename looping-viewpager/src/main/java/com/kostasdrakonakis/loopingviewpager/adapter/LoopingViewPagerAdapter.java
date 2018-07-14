@@ -152,9 +152,9 @@ public abstract class LoopingViewPagerAdapter<T> extends PagerAdapter {
         if (!(isEndless && isInfinite)) return position;
         int itemsPosition;
         if (position == 0) {
-            itemsPosition = getCount() - 1 - 2; //First item is a dummy of last item
+            itemsPosition = getCount() - 1 - 2;
         } else if (position > getCount() - 2) {
-            itemsPosition = 0; //Last item is a dummy of first item
+            itemsPosition = 0;
         } else {
             itemsPosition = position - 1;
         }

@@ -1,1 +1,1 @@
-include ':mobile', ':looping-viewpager'
+include ':app', ':looping-viewpager'
