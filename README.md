@@ -1,5 +1,6 @@
-Looping ViewPager [ ![Download](https://api.bintray.com/packages/kdrakonakis/maven/looping-viewpager/images/download.svg) ](https://bintray.com/kdrakonakis/maven/looping-viewpager/_latestVersion)
+Looping ViewPager [ ![Download](https://api.bintray.com/packages/kdrakonakis/maven/looping-viewpager/images/download.svg) ](https://bintray.com/kdrakonakis/maven/looping-viewpager/_latestVersion) [![Build Status](https://travis-ci.org/kostasdrakonakis/looping_viewpager.svg?branch=master)](https://travis-ci.org/kostasdrakonakis/looping_viewpager)
 
+<p align="center"><a href='https://ko-fi.com/Z8Z4XWSM' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi4.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
 
 
 A custom ViewPager that implements autoscrolling and endless scrolling.
@@ -13,12 +14,12 @@ Download the latest JAR or grab via Maven:
 <dependency>
   <groupId>com.github.kostasdrakonakis</groupId>
   <artifactId>looping-viewpager</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-implementation 'com.github.kostasdrakonakis:looping-viewpager:1.0.0'
+implementation 'com.github.kostasdrakonakis:looping-viewpager:1.0.1'
 ```
 
 License
