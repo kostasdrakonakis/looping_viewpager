@@ -3,11 +3,12 @@ package com.kostasdrakonakis.loopingviewpager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
-import android.support.annotation.IntegerRes;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.IntegerRes;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.kostasdrakonakis.loopingviewpager.adapter.LoopingViewPagerAdapter;
 
@@ -104,22 +105,17 @@ public class LoopingViewPager extends ViewPager {
     }
 
     public int getSelectingIndicatorPosition(boolean isToTheRight) {
-        if (scrollState == SCROLL_STATE_SETTLING
-                || scrollState == SCROLL_STATE_IDLE
-                || (previousScrollState == SCROLL_STATE_SETTLING
-                && scrollState == SCROLL_STATE_DRAGGING)) {
+        if (scrollState == SCROLL_STATE_SETTLING || scrollState == SCROLL_STATE_IDLE || (previousScrollState == SCROLL_STATE_SETTLING && scrollState == SCROLL_STATE_DRAGGING)) {
             return getIndicatorPosition();
         }
         int delta = isToTheRight ? 1 : -1;
 
         if (!isEndless) return currentPagePosition + delta;
 
-        if (!(getAdapter() instanceof LoopingViewPagerAdapter))
-            return currentPagePosition + delta;
+        if (!(getAdapter() instanceof LoopingViewPagerAdapter)) return currentPagePosition + delta;
         if (currentPagePosition == 1 && !isToTheRight) {
             return ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition() - 1;
-        } else if (currentPagePosition == ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition()
-                && isToTheRight) {
+        } else if (currentPagePosition == ((LoopingViewPagerAdapter) getAdapter()).getLastItemPosition() && isToTheRight) {
             return 0;
         } else {
             return currentPagePosition + delta - 1;
@@ -199,8 +195,7 @@ public class LoopingViewPager extends ViewPager {
                     }
                 } else {
                     if (scrollState == SCROLL_STATE_DRAGGING) {
-                        if ((isToTheRight && Math.abs(realPosition - currentPagePosition) == 2) ||
-                                !isToTheRight && realPosition == currentPagePosition) {
+                        if ((isToTheRight && Math.abs(realPosition - currentPagePosition) == 2) || !isToTheRight && realPosition == currentPagePosition) {
                             return;
                         }
                     }
@@ -226,8 +221,7 @@ public class LoopingViewPager extends ViewPager {
                 if (!isIndicatorSmart) {
                     if (scrollState == SCROLL_STATE_SETTLING && state == SCROLL_STATE_DRAGGING) {
                         if (indicatorListener != null) {
-                            indicatorListener.onIndicatorProgress(
-                                    getSelectingIndicatorPosition(isToTheRight), 1);
+                            indicatorListener.onIndicatorProgress(getSelectingIndicatorPosition(isToTheRight), 1);
                         }
                     }
                 }
