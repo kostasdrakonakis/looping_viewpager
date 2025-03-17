@@ -3,11 +3,11 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace "com.kostasdrakonakis.loopingviewpager"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
