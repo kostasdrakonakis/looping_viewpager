@@ -1,16 +1,15 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
 android {
     namespace "com.kostasdrakonakis.sample"
-    compileSdk 36
+    compileSdk 37
     defaultConfig {
         applicationId "com.kostasdrakonakis.sample"
-        minSdkVersion 21
-        targetSdkVersion 36
+        minSdkVersion 23
+        targetSdkVersion 37
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -30,12 +29,11 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.7.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
     implementation project(':looping-viewpager')
 }
